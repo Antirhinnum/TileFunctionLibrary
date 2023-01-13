@@ -1,0 +1,9 @@
+Adds a variety of interfaces to emulate vanilla tile functions on ModTiles.
+This mod does nothing by itself and must be used by other mods to work.
+If you would like to use this mod, see this mod's GitHub, linked on the Steam page.
+
+Currently supports:
+ - Allowing the player to place extractibles into tiles (Extractinator).
+
+Changelog:
+ - 1.0.0: Release.
