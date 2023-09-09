@@ -7,6 +7,14 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using TileFunctionLibrary.API;
 
+#if TML_2022_09
+
+using IL_Player = IL.Terraria.Player;
+
+#else
+using Terraria.GameContent;
+#endif
+
 namespace TileFunctionLibrary.Common.Systems;
 
 /// <summary>
@@ -17,6 +25,11 @@ internal sealed class ExtractinatorEditsSystem : ModSystem
 	public override void Load()
 	{
 		IL_Player.PlaceThing_ItemInExtractinator += AllowInterfacedModTilesToExtractinate;
+
+#if !TML_2022_09
+		On_Player.ExtractinatorUse += ForceInterfacedModTilesToUseChlorophyteLootTable;
+		On_Player.TryGettingItemTraderFromBlock += MakeChlorophyteExtractinatorTradesAvailable;
+#endif
 	}
 
 	private void AllowInterfacedModTilesToExtractinate(ILContext il)
@@ -67,12 +80,15 @@ internal sealed class ExtractinatorEditsSystem : ModSystem
 			i => i.MatchLdloca(tileIndex),
 			i => i.MatchCall(tileGetType),
 			i => i.MatchLdindU2(),
-			i => i.MatchLdcI4(TileID.Extractinator),
+			i => i.MatchLdcI4(TileID.Extractinator)
+#if !TML_2022_09
+			,
 			i => i.MatchBeq(out _),
 			i => i.MatchLdloca(tileIndex),
 			i => i.MatchCall(tileGetType),
 			i => i.MatchLdindU2(),
 			i => i.MatchLdcI4(TileID.ChlorophyteExtractinator)
+#endif
 			))
 		{
 			throw new Exception("AllowInterfacedModTilesToExtractinate patch #2 failed.");
@@ -90,4 +106,26 @@ internal sealed class ExtractinatorEditsSystem : ModSystem
 	{
 		return vanillaSuccess || (TileLoader.GetTile(tile.TileType) is IExtractinatorTile extractinator && extractinator.ShouldFunctionAsExtractinator);
 	}
+
+#if !TML_2022_09
+	private void ForceInterfacedModTilesToUseChlorophyteLootTable(On_Player.orig_ExtractinatorUse orig, Player self, int extractType, int extractinatorBlockType)
+	{
+		if (TileLoader.GetTile(extractinatorBlockType) is IExtractinatorTile extractinator && extractinator.UseChlorophyteExtractinatorLootTable)
+		{
+			extractinatorBlockType = TileID.ChlorophyteExtractinator;
+		}
+
+		orig(self, extractType, extractinatorBlockType);
+	}
+
+	private ItemTrader MakeChlorophyteExtractinatorTradesAvailable(On_Player.orig_TryGettingItemTraderFromBlock orig, Tile targetBlock)
+	{
+		if (TileLoader.GetTile(targetBlock.TileType) is IExtractinatorTile extractinator && extractinator.ShouldDoChlorophyteExtractinatorItemTrades)
+		{
+			return ItemTrader.ChlorophyteExtractinator;
+		}
+
+		return orig(targetBlock);
+	}
+#endif
 }

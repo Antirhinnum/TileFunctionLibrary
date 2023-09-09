@@ -1,7 +1,8 @@
 Adds a variety of interfaces to emulate vanilla tile functions on ModTiles.
 This mod does nothing by itself and must be used by other mods to work.
 
-[url=https://github.com/Antirhinnum/TileFunctionLibrary]Source on GitHub[/url]
+See the [url=https://github.com/Antirhinnum/TileFunctionLibrary]source on GitHub[/url] for Mod.Call methods and API references.
 
 Currently supports:
-[list][*]Allowing the player to place extractibles into tiles (Extractinator).[/list]
+[list][*]Allowing the player to place extractibles into tiles (Extractinator).
+[*][b]1.4.4 only:[/b] Allowing the player to treat tiles like the Chlorophyte Extractinator.[/list]

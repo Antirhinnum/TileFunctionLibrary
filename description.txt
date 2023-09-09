@@ -4,6 +4,4 @@ If you would like to use this mod, see this mod's GitHub, linked on the Steam pa
 
 Currently supports:
  - Allowing the player to place extractibles into tiles (Extractinator).
-
-Changelog:
- - 1.0.0: Release.
+ - 1.4.4 only: Allowing the player to treat tiles like the Chlorophyte Extractinator.
